@@ -8,7 +8,6 @@ import com.dicoding.bangkit.android.jetpack.showcatalogueapp.R
 import com.dicoding.bangkit.android.jetpack.showcatalogueapp.databinding.ActivityMainBinding
 import com.dicoding.bangkit.android.jetpack.showcatalogueapp.ui.fragmentui.MovieFragment
 import com.dicoding.bangkit.android.jetpack.showcatalogueapp.ui.fragmentui.TvShowFragment
-import com.dicoding.bangkit.android.jetpack.showcatalogueapp.ui.pager.SectionsPagerAdapter
 import com.dicoding.bangkit.android.jetpack.showcatalogueapp.ui.viewmodelui.MainViewModel
 import com.dicoding.bangkit.android.jetpack.showcatalogueapp.viewmodel.ViewModelFactory
 
@@ -53,6 +52,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.bottomNavbar.setNavigationChangeListener { view, _ ->
             when (view.id) {
+
                 R.id.nav_movie -> setActiveFragment(
                     movieFragment,
                     resources.getString(R.string.tab_title_movie)
@@ -62,6 +62,7 @@ class MainActivity : AppCompatActivity() {
                     tvShowFragment,
                     resources.getString(R.string.tab_title_tvshow)
                 )
+
             }
         }
     }

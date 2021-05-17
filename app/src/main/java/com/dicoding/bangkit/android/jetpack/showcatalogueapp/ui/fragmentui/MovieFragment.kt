@@ -22,6 +22,7 @@ class MovieFragment : Fragment(), DataCallback {
 
     private lateinit var mainMovieViewModel: MainViewModel
     private lateinit var binding: FragmentMovieBinding
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

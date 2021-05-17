@@ -1,25 +1,28 @@
+@file:Suppress("DEPRECATION")
+
 package com.dicoding.bangkit.android.jetpack.showcatalogueapp.modelpojo.sourceremote
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.dicoding.bangkit.android.jetpack.moviecatalogueapp.utils.DataDummy
+import com.dicoding.bangkit.android.jetpack.showcatalogueapp.LiveDataTestUtil
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doAnswer
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.verify
 import junit.framework.Assert
+import junit.framework.TestCase
 import kotlinx.coroutines.runBlocking
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
 
-class ShowtaimentRepositoryTest {
+class ShowtaimentRepositoryTest : TestCase() {
+
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    private val remote = Mockito.mock(RemoteDataSource::class.java)
-    private val catalogRepository =
-        ShowtaimentRepositoryFileTest(
-            remote
-        )
+    private val remote = Mockito.mock(ShowtaimentRemoteDataSource::class.java)
+    private val catalogRepository = FakeShowtaimentRepository(remote)
 
     private val listMovieResponse = DataDummy.generateDataMovieDummyResponse()
     private val movieId = listMovieResponse[0].id
@@ -28,16 +31,17 @@ class ShowtaimentRepositoryTest {
     private val movieResponse = DataDummy.generateDataMovieDummyResponse()[0]
     private val tvShowResponse = DataDummy.generateDataTvShowDummyResponse()[0]
 
+
     @Test
-    fun getMovies() {
+    fun testGetMovies() {
         runBlocking {
             doAnswer {invocation ->
-                (invocation.arguments[0] as RemoteDataSource.LoadNowPlayingMoviesCallback).onAllMoviesReceived(listMovieResponse)
+                (invocation.arguments[0] as ShowtaimentRemoteDataSource.LoadNowPlayingMoviesCallback).onAllMoviesReceived(listMovieResponse)
                 null
             }.`when`(remote).getNowPlayingMovies(any())
         }
 
-        val data = LiveDataTestUtil.getValue(catalogRepository.getNowPlayingMovies())
+        val data = LiveDataTestUtil.getValue(catalogRepository.getMovies())
 
         runBlocking {
             verify(remote).getNowPlayingMovies(any())
@@ -45,13 +49,14 @@ class ShowtaimentRepositoryTest {
 
         Assert.assertNotNull(data)
         assertEquals(listMovieResponse.size.toLong(), data.size.toLong())
+
     }
 
     @Test
-    fun getMovieDetail() {
+    fun testGetMovieDetail() {
         runBlocking {
             doAnswer {invocation ->
-                (invocation.arguments[1] as RemoteDataSource.LoadMovieDetailCallback).onMovieDetailReceived(movieResponse)
+                (invocation.arguments[1] as ShowtaimentRemoteDataSource.LoadMovieDetailCallback).onMovieDetailReceived(movieResponse)
                 null
             }.`when`(remote).getMovieDetail(eq(movieId), any())
         }
@@ -67,15 +72,15 @@ class ShowtaimentRepositoryTest {
     }
 
     @Test
-    fun getTvShow() {
+    fun testGetTvShow() {
         runBlocking {
             doAnswer { invocation ->
-                (invocation.arguments[0] as RemoteDataSource.LoadOnTheAirTvShowCallback).onAllTvShowsReceived(listTvShowResponse)
+                (invocation.arguments[0] as ShowtaimentRemoteDataSource.LoadOnTheAirTvShowCallback).onAllTvShowsReceived(listTvShowResponse)
                 null
             }.`when`(remote).getTvShowOnTheAir(any())
         }
 
-        val data = LiveDataTestUtil.getValue(catalogRepository.getTvShowOnTheAir())
+        val data = LiveDataTestUtil.getValue(catalogRepository.getTvShow())
 
         runBlocking {
             verify(remote).getTvShowOnTheAir(any())
@@ -83,13 +88,14 @@ class ShowtaimentRepositoryTest {
 
         Assert.assertNotNull(data)
         assertEquals(listTvShowResponse.size.toLong(), data.size.toLong())
+
     }
 
     @Test
-    fun getTvShowDetail() {
+    fun testGetTvShowDetail() {
         runBlocking {
             doAnswer {invocation ->
-                (invocation.arguments[1] as RemoteDataSource.LoadTvShowDetailCallback).onTvShowDetailReceived(tvShowResponse)
+                (invocation.arguments[1] as ShowtaimentRemoteDataSource.LoadTvShowDetailCallback).onTvShowDetailReceived(tvShowResponse)
                 null
             }.`when`(remote).getTvShowDetail(eq(tvShowId), any())
         }
@@ -103,5 +109,4 @@ class ShowtaimentRepositoryTest {
         Assert.assertNotNull(data)
         assertEquals(tvShowResponse.id, data.id)
     }
-
 }

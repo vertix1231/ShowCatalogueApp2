@@ -2,10 +2,11 @@
 buildscript {
     ext {
 
-        kotlin_version = "1.4.32"
+        kotlin_version = "1.5.0"
 
         //instrumental testing
         androidXTestVersion = '1.2.0'
+
     }
     repositories {
         google()
@@ -13,7 +14,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:4.2.0'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.0"
 
 
 

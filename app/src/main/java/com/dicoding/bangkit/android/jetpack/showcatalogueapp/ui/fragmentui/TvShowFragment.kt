@@ -46,6 +46,7 @@ class TvShowFragment : Fragment(), DataCallback {
                 ViewModelFactory.getInstance()
             )[MainViewModel::class.java]
         }
+
         mainTvshoViewModel.getListTvShows().observe(viewLifecycleOwner, { listTvshow ->
             binding.rvTvshow.adapter.let { adapter ->
                 when(adapter){

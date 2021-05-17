@@ -7,34 +7,24 @@ import com.dicoding.bangkit.android.jetpack.showcatalogueapp.modelpojo.Showtaime
 import com.dicoding.bangkit.android.jetpack.showcatalogueapp.modelpojo.sourceremote.response.Movie
 import com.dicoding.bangkit.android.jetpack.showcatalogueapp.modelpojo.sourceremote.response.Tvshow
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class ShowtaimentRepository private constructor(private val showtaimentRemoteDataSource: ShowtaimentRemoteDataSource):ShowtaimentDataSource{
-
-    companion object {
-        @Volatile
-        private var instance: ShowtaimentRepository? = null
-
-        fun getInstance(showtaimentDataSource: ShowtaimentRemoteDataSource): ShowtaimentRepository =
-            instance ?: synchronized(this) {
-                instance ?: ShowtaimentRepository(showtaimentDataSource)
-            }
-    }
+class FakeShowtaimentRepository (private val showtaimentRemoteDataSource: ShowtaimentRemoteDataSource):ShowtaimentDataSource {
 
     override fun getMovies(): LiveData<List<Showtaiment>> {
         val listMovie = MutableLiveData<List<Showtaiment>>()
-        CoroutineScope(IO).launch {
+        CoroutineScope(Dispatchers.IO).launch {
             showtaimentRemoteDataSource.getNowPlayingMovies(object : ShowtaimentRemoteDataSource.LoadNowPlayingMoviesCallback{
                 override fun onAllMoviesReceived(movieResponse: List<Movie>) {
                     val movielistdata = ArrayList<Showtaiment>()
                     for (i in movieResponse){
                         val movie = Showtaiment(
-                                i.id,
-                                i.name,
-                                i.desc,
-                                i.poster,
-                                i.img_preview,
+                            i.id,
+                            i.name,
+                            i.desc,
+                            i.poster,
+                            i.img_preview,
                         )
                         movielistdata.add(movie)
                     }
@@ -50,7 +40,7 @@ class ShowtaimentRepository private constructor(private val showtaimentRemoteDat
 
     override fun getMovieDetail(movieId: Int): LiveData<Showtaiment> {
         val movieDetailSelected = MutableLiveData<Showtaiment>()
-        CoroutineScope(IO).launch {
+        CoroutineScope(Dispatchers.IO).launch {
             showtaimentRemoteDataSource.getMovieDetail(movieId,object : ShowtaimentRemoteDataSource.LoadMovieDetailCallback{
                 override fun onMovieDetailReceived(movieResponse: Movie) {
                     val moviedetail = Showtaiment(
@@ -71,7 +61,7 @@ class ShowtaimentRepository private constructor(private val showtaimentRemoteDat
 
     override fun getTvShow(): LiveData<List<Showtaiment>> {
         val listTvshowSelected = MutableLiveData<List<Showtaiment>>()
-        CoroutineScope(IO).launch {
+        CoroutineScope(Dispatchers.IO).launch {
             showtaimentRemoteDataSource.getTvShowOnTheAir(object : ShowtaimentRemoteDataSource.LoadOnTheAirTvShowCallback{
                 override fun onAllTvShowsReceived(tvShowResponse: List<Tvshow>) {
                     val tvListData = ArrayList<Showtaiment>()
@@ -96,7 +86,7 @@ class ShowtaimentRepository private constructor(private val showtaimentRemoteDat
 
     override fun getTvShowDetail(tvShowId: Int): LiveData<Showtaiment> {
         val tvShowDetailSelected = MutableLiveData<Showtaiment>()
-        CoroutineScope(IO).launch {
+        CoroutineScope(Dispatchers.IO).launch {
             showtaimentRemoteDataSource.getTvShowDetail(tvShowId,object : ShowtaimentRemoteDataSource.LoadTvShowDetailCallback{
                 override fun onTvShowDetailReceived(tvShowResponse: Tvshow) {
                     val tvShow = Showtaiment(
@@ -113,5 +103,4 @@ class ShowtaimentRepository private constructor(private val showtaimentRemoteDat
         }
         return tvShowDetailSelected
     }
-
 }
