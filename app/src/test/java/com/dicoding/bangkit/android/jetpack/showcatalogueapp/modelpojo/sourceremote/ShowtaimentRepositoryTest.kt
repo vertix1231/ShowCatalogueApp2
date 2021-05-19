@@ -10,13 +10,13 @@ import com.nhaarman.mockitokotlin2.doAnswer
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.verify
 import junit.framework.Assert
-import junit.framework.TestCase
+import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.runBlocking
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
 
-class ShowtaimentRepositoryTest : TestCase() {
+class ShowtaimentRepositoryTest   {
 
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
@@ -52,6 +52,7 @@ class ShowtaimentRepositoryTest : TestCase() {
 
     }
 
+
     @Test
     fun testGetMovieDetail() {
         runBlocking {
@@ -71,6 +72,7 @@ class ShowtaimentRepositoryTest : TestCase() {
         assertEquals(movieResponse.id, data.id)
     }
 
+
     @Test
     fun testGetTvShow() {
         runBlocking {
@@ -88,7 +90,6 @@ class ShowtaimentRepositoryTest : TestCase() {
 
         Assert.assertNotNull(data)
         assertEquals(listTvShowResponse.size.toLong(), data.size.toLong())
-
     }
 
     @Test

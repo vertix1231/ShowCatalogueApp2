@@ -34,6 +34,7 @@ android {
         }
     }
 
+    // test gradle mockit solution(???) jujur ini masih g ngerti gara2 error di unit testing repository liat dari dcumentasinya
     testOptions {
         unitTests.returnDefaultValues = true
     }
